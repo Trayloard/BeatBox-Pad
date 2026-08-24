@@ -1,0 +1,1 @@
+# BeatBox Pad\n\nInitial repository seed; the full handoff baseline follows in the next commit.\n
