@@ -1,0 +1,81 @@
+openapi: 3.1.0
+info:
+  title: BeatBox Pad API
+  version: 0.0.0
+  description: API contract for BeatBox Pad
+servers:
+  - url: /api
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      summary: Health check
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthCheckResponse"
+  /adlib/voice:
+    post:
+      operationId: adlibVoice
+      summary: Stream AI ad-lib agent response
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdlibVoiceRequest"
+      responses:
+        "200":
+          description: Server-sent events stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+  /adlib/session/{sessionId}:
+    delete:
+      operationId: clearAdlibSession
+      summary: Clear an ad-lib session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Session cleared
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+components:
+  schemas:
+    HealthCheckResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+    AdlibVoiceRequest:
+      type: object
+      required:
+        - sessionId
+      properties:
+        sessionId:
+          type: string
+        audio:
+          type: string
+          description: Base64-encoded audio payload
+    OkResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
