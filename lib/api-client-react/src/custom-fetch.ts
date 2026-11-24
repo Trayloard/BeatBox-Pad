@@ -51,5 +51,9 @@ export async function customFetch<T>(
     return undefined as T;
   }
 
+  if (response.headers.get("content-type")?.toLowerCase().includes("text/event-stream")) {
+    return (await response.text()) as T;
+  }
+
   return (await response.json()) as T;
 }
